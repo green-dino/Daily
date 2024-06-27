@@ -1,9 +1,14 @@
 #!python3
 # Prints network Addresses, Hosts, NETMASK, global and private 
-
+from typing import List, Dict, Tuple, Optional, Union, Any, Callable
+from typing_extensions import TypedDict, Protocol, Literal, Final
 import ipaddress
+from pprint import pformat
 
-def get_valid_input(prompt):
+# Define a type alias for network objects
+Network = ipaddress.IPv4Network | ipaddress.IPv6Network
+
+def get_valid_input(prompt: str) -> Network:
     while True:
         try:
             network = input(prompt).strip()
@@ -14,14 +19,32 @@ def get_valid_input(prompt):
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
 
+def is_private(address):
+    for block in [ipaddress.IPv4Network('10.0.0.0/8'),
+    ipaddress.IPv4Network('172.16.0.0/12'),
+    ipaddress.IPv4Network('192.168.0.0/16')]:
+        if address in block:
+            return True
+    return False
+
+def is_global(network: Network) -> bool:
+        """Determine whether the network is global (not private)"""
+        for ip in network:
+            if is_private(ip):
+                return False
+        return True
+
 def print_hosts(network):
     host_list = list(network.hosts())
-    for i in host_list in enumerate(host_list, start=1):
-        print(host_list)
-        if i % 10 == 0: # hosts per page 
-            cont = input("Press enter for more hosts or type 'exit' to stop:")
-            if cont == 'exit':
+    for host_index, ip in enumerate(host_list, start=1):
+        print(f"{ip} ({host_index})")
+
+        # Display hosts per page or stop displaying
+        if len(host_list) % 10 == 0:
+            cont = input("Press enter for more hosts or type 'exit' to stop: ")
+            if cont == "exit":
                 break
+
 
 def print_network_details(network):
     """Print network details and hosts."""
