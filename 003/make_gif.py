@@ -17,7 +17,7 @@ def resize_images_to_same_size(images):
     """Resize all images to the size of the first image."""
     target_size = images[0].size
     return [image.resize(target_size, Image.LANCZOS) for image in images]
-
+ 
 def convert_images_to_numpy_arrays(images):
     """Convert a list of PIL Images to a list of NumPy arrays."""
     return [np.array(image) for image in images]
