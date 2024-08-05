@@ -2,7 +2,9 @@ import os
 import requests
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-from utils import extract_base_url, fix_url
+from utils import extract_base_url, fix_url, delay, create_session
+
+
 class ImageDownloader:
     def __init__(self, save_dir="./IMAGES/"):
         self.save_dir = save_dir
